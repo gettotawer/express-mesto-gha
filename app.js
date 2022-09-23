@@ -15,12 +15,16 @@ app.use((req, res, next) => {
     req.user = {
       _id: '632b1719067371d1b907f8d7'
     };
-  
+
     next();
   });
 app.use("/cards", routerCards);
 
 app.use("/users", routerUsers);
+
+app.all("*", (req, res ) => {
+    res.status(404).send({message: "Page Not Found"});
+});
 app.listen(PORT, () => {
     // Если всё работает, консоль покажет, какой порт приложение слушает
     console.log(`App listening on port ${PORT}`)

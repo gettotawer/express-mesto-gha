@@ -32,11 +32,14 @@ const getAllCards = (req, res) => {
 
 const deleteCardById = (req, res) => {
     Card.findByIdAndRemove(req.params.id).populate('owner').then((card) => {
+        if(!card){
+            return res.status(404).send({message: "Карточка с указанным _id не найдена."}); 
+        }
         res.send(card)
     }).catch((error) => {
         switch(error.name){
             case "CastError":
-                return res.status(404).send({message: "Карточка с указанным _id не найдена"});
+                return res.status(400).send({message: "Передан несуществующий _id карточки."});
                 break;
             default:
                 return res.status(500).send({message: error.message})
@@ -49,14 +52,14 @@ const likeCard = (req, res) => {
         new: true, // обработчик then получит на вход обновлённую запись
     }).populate('likes')
     .then((card) => {
+        if(!card){
+            return res.status(404).send({message: "Передан несуществующий _id карточки."}); 
+        }
         res.send(card)
     }).catch((error) => {
         switch(error.name){
-            case "ValidationError":
-                return res.status(400).send({message: "Переданы некорректные данные для постановки лайка."});
-                break;
             case "CastError":
-                return res.status(404).send({message: "Передан несуществующий _id карточки."});
+                return res.status(400).send({message: "Передан несуществующий _id карточки."});
                 break;
             default:
                 return res.status(500).send({message: error.message})
@@ -69,14 +72,14 @@ const dislikeCard = (req, res) => {
         new: true, // обработчик then получит на вход обновлённую запись
     }).populate('likes')
     .then((card) => {
+        if(!card){
+            return res.status(404).send({message: "Передан несуществующий _id карточки."}); 
+        }
         res.send(card)
     }).catch((error) => {
         switch(error.name){
-            case "ValidationError":
-                return res.status(400).send({message: "Переданы некорректные данные для снятии лайка."});
-                break;
             case "CastError":
-                return res.status(404).send({message: "Передан несуществующий _id карточки."});
+                return res.status(400).send({message: "Переданы некорректные данные для снятии лайка."});
                 break;
             default:
                 return res.status(500).send({message: error.message})

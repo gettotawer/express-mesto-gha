@@ -38,15 +38,19 @@ const getAllUsers = (req, res) => {
 
 const getUserById = (req, res) => {
     User.findById(req.params.id).then((user) => {
+        if(!user){
+            return res.status(404).send({message: "Пользователь по указанному _id не найден."});
+        }
         res.send(user)
     }).catch((error) => {
         switch(error.name){
             case "CastError":
-                return res.status(404).send({message: "Пользователь по указанному _id не найден"});
+                return res.status(400).send({message: "Переданы некорректные данные при поиске пользователя."});
                 break;
             default:
                 return res.status(500).send({message: error.message})
         }
+
     })
 }
 
