@@ -11,7 +11,7 @@ const createUser = (req, res) => {
                 return res.status(400).send({message: "Переданы некорректные данные при создании пользователя."});
                 break;
             default:
-                return res.status(500).send({message: error.message})
+                return res.status(500).send({message: "На сервере произошла ошибка."})
         }
         // if(error.name == "ValidationError"){
         //    return res.status(400).send({message: "Переданы некорректные данные при создании пользователя."})
@@ -31,7 +31,7 @@ const getAllUsers = (req, res) => {
                 return res.status(400).send({message: "Переданы некорректные данные при создании пользователя."});
                 break;
             default:
-                return res.status(500).send({message: error.message})
+                return res.status(500).send({message: "На сервере произошла ошибка."})
         }
     })
 }
@@ -48,7 +48,7 @@ const getUserById = (req, res) => {
                 return res.status(400).send({message: "Переданы некорректные данные при поиске пользователя."});
                 break;
             default:
-                return res.status(500).send({message: error.message})
+                return res.status(500).send({message: "На сервере произошла ошибка."})
         }
 
     })
@@ -70,7 +70,7 @@ const updateUserInformation = (req, res) => {
                 return res.status(404).send({message: "Пользователь с указанным _id не найден"});
                 break;
             default:
-                return res.status(500).send({message: error.message})
+                return res.status(500).send({message: "На сервере произошла ошибка"})
         }
     })
 }
@@ -91,7 +91,7 @@ const updateUserAvatar = (req, res) => {
                 return res.status(404).send({message: "Пользователь с указанным _id не найден"});
                 break;
             default:
-                return res.status(500).send({message: error.message})
+                return res.status(500).send({message: "На сервере произошла ошибка."})
         }
     })
 }

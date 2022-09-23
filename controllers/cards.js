@@ -11,7 +11,7 @@ const createCard = (req, res) => {
                 return res.status(400).send({message: "Переданы некорректные данные при создании карточки."});
                 break;
             default:
-                return res.status(500).send({message: error.message})
+                return res.status(500).send({message: "На сервере произошла ошибка."})
         }
     })
 }
@@ -25,7 +25,7 @@ const getAllCards = (req, res) => {
                 return res.status(400).send({message: "Переданы некорректные данные."});
                 break;
             default:
-                return res.status(500).send({message: error.message})
+                return res.status(500).send({message: "На сервере произошла ошибка."})
         }
     })
 }
@@ -42,7 +42,7 @@ const deleteCardById = (req, res) => {
                 return res.status(400).send({message: "Передан несуществующий _id карточки."});
                 break;
             default:
-                return res.status(500).send({message: error.message})
+                return res.status(500).send({message: "На сервере произошла ошибка."})
         }
     })
 }
@@ -62,7 +62,7 @@ const likeCard = (req, res) => {
                 return res.status(400).send({message: "Передан несуществующий _id карточки."});
                 break;
             default:
-                return res.status(500).send({message: error.message})
+                return res.status(500).send({message: "На сервере произошла ошибка."})
         }
     })
 }
@@ -82,7 +82,7 @@ const dislikeCard = (req, res) => {
                 return res.status(400).send({message: "Переданы некорректные данные для снятии лайка."});
                 break;
             default:
-                return res.status(500).send({message: error.message})
+                return res.status(500).send({message: "На сервере произошла ошибка."})
         }
     })
 }
