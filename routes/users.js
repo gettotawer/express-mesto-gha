@@ -11,7 +11,12 @@ const regUrl = /^https?:\/\/[-a-zA-Z0-9]{2,256}\.([a-zA-Z/]{2,256})*/;
 routerUsers.get('/', getAllUsers);
 routerUsers.get('/me', getUserInformation);
 routerUsers.get('/:id', getUserById);
-routerUsers.patch('/me', updateUserInformation);
+routerUsers.patch('/me', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
+  }).unknown(true),
+}), updateUserInformation);
 routerUsers.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
     link: Joi.string().required().regex(regUrl),

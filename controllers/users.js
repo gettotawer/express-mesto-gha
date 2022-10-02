@@ -48,7 +48,12 @@ const login = (req, res, next) => {
             throw new AuthError('Пользователь не найден или неверный пароль');
           }
           const token = jwt.sign({ _id: user._id }, SECRET, { expiresIn: '7d' });
-          return res.status(200).send({ token });
+          return res
+            .cookie('jwt', token, {
+              maxAge: 3600000 * 24 * 7,
+              httpOnly: true,
+            })
+            .end();
         });
     }).catch(next);
 };
@@ -75,7 +80,7 @@ const getUserById = (req, res, next) => {
 
 const updateUserInformation = (req, res, next) => {
   const { name, about } = req.body;
-  const id = getUserId(req.headers.authorization);
+  const id = getUserId(req.cookies.jwt);
   User.findByIdAndUpdate(id._id, { name, about }, {
     new: true, // обработчик then получит на вход обновлённую запись
     runValidators: true,
@@ -94,7 +99,7 @@ const updateUserInformation = (req, res, next) => {
 
 const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  const id = getUserId(req.headers.authorization);
+  const id = getUserId(req.cookies.jwt);
   User.findByIdAndUpdate(id._id, { avatar }, {
     new: true, // обработчик then получит на вход обновлённую запись
     runValidators: true,
@@ -116,7 +121,7 @@ const updateUserAvatar = (req, res, next) => {
 
 const getUserInformation = (req, res, next) => {
   // const id = jwt.verify(req.headers.authorization, SECRET);
-  const id = getUserId(req.headers.authorization);
+  const id = getUserId(req.cookies.jwt);
   User.findById(id._id).then((user) => {
     if (!user) {
       throw new NotFoundError('Пользователь по указанному _id не найден.');

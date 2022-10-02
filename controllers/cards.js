@@ -23,7 +23,7 @@ const getAllCards = (req, res, next) => {
 };
 
 const deleteCardById = (req, res, next) => {
-  const id = getUserId(req.headers.authorization);
+  const id = getUserId(req.cookies.jwt);
   // eslint-disable-next-line consistent-return
   Card.findById(req.params.id).populate('owner').then((card) => {
     if (!card) {

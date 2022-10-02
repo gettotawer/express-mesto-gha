@@ -3,7 +3,7 @@ const User = require('../models/user');
 const { SECRET } = require('../consts/secret');
 
 // eslint-disable-next-line max-len
-const isAuthorizedMiddleware = (req, res, next) => jwt.verify(req.headers.authorization, SECRET, (err, data) => {
+const isAuthorizedMiddleware = (req, res, next) => jwt.verify(req.cookies.jwt, SECRET, (err, data) => {
   if (err) {
     return res.status(401).send({ message: 'Ошибка! Вы не авторизированы.' });
   }
