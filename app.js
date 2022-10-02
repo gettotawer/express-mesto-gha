@@ -1,9 +1,13 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const mongoose = require('mongoose');
+const { celebrate, Joi, errors } = require('celebrate');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
+const {
+  isAuthorizedMiddleware,
+} = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -13,15 +17,21 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(bodyParser.json());
 
-app.use('/cards', routerCards);
+app.use('/cards', isAuthorizedMiddleware, routerCards);
 
-app.use('/users', routerUsers);
+app.use('/users', isAuthorizedMiddleware, routerUsers);
 app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+  }).unknown(true),
+}), createUser);
 
 app.all('*', (req, res) => {
   res.status(404).send({ message: 'Страница не существует' });
 });
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
