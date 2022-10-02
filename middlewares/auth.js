@@ -2,21 +2,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { SECRET } = require('../consts/secret');
 
-// const SECRET = 'sdqdqsdqsddewcwkehbgvbyudec';
-
-// const createToken = ({ id }) => jwt.sign({ id }, SECRET, { expiresIn: '7d' });
-
-// const isAuthorized = (token) => {
-//   try {
-//     const id = jwt.verify(token, SECRET);
-//     return User.findOne({ _id: id })
-//       .then((user) => Boolean(user))
-//       .catch(() => false);
-//   } catch (error) {
-//     return false;
-//   }
-// };
-
 // eslint-disable-next-line max-len
 const isAuthorizedMiddleware = (req, res, next) => jwt.verify(req.headers.authorization, SECRET, (err, data) => {
   if (err) {

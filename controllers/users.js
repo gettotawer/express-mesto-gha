@@ -20,6 +20,9 @@ const createUser = (req, res, next) => {
     })).then((user) => res.send(user.toObject({
       useProjection: true,
     }))).catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new ValidationError('Переданы некорректные данные при обновлении профиля.'));
+      }
       if (err.code === 11000) {
         next(new RegisterError('Пользователь с таким email уже существует'));
       }

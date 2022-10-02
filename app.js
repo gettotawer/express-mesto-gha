@@ -27,10 +27,6 @@ app.post('/signup', celebrate({
   }).unknown(true),
 }), createUser);
 
-app.all('*', (req, res) => {
-  res.status(404).send({ message: 'Страница не существует' });
-});
-
 app.use(errors());
 
 app.use((err, req, res, next) => {
@@ -45,6 +41,10 @@ app.use((err, req, res, next) => {
     });
 
   next();
+});
+
+app.all('*', (req, res) => {
+  res.status(404).send({ message: 'Страница не существует' });
 });
 
 app.listen(PORT, () => {
