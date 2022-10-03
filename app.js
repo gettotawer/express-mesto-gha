@@ -19,10 +19,12 @@ const app = express();
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use('/cards', isAuthorizedMiddleware, routerCards);
 
 app.use('/users', isAuthorizedMiddleware, routerUsers);
+
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -41,10 +43,9 @@ app.post('/signup', celebrate({
 
 app.use(errors());
 
-app.use(cookieParser());
-
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
+  console.log(err);
 
   res.status(statusCode)
     .send({
@@ -57,9 +58,9 @@ app.use((err, req, res, next) => {
   next();
 });
 
-app.all('*', (req, res) => {
-  res.status(404).send({ message: 'Страница не существует' });
-});
+// app.all('*', (req, res) => {
+//   res.status(404).send({ message: 'Страница не существует' });
+// });
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
