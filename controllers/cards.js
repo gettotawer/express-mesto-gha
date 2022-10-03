@@ -49,6 +49,7 @@ const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: id._id } }, {
     new: true, // обработчик then получит на вход обновлённую запись
   }).populate('likes')
+    // eslint-disable-next-line consistent-return
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Карточка с указанным _id не найдена.'));
@@ -68,6 +69,7 @@ const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.id, { $pull: { likes: id._id } }, {
     new: true, // обработчик then получит на вход обновлённую запись
   }).populate('likes')
+    // eslint-disable-next-line consistent-return
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Карточка с указанным _id не найдена.'));
