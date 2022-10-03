@@ -43,7 +43,8 @@ const deleteCardById = (req, res, next) => {
 };
 
 const likeCard = (req, res, next) => {
-  Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: req.user._id } }, {
+  const id = getUserId(req.cookies.jwt);
+  Card.findByIdAndUpdate(req.params.id, { $addToSet: { likes: id._id } }, {
     new: true, // обработчик then получит на вход обновлённую запись
   }).populate('likes')
     .then((card) => {
@@ -60,7 +61,8 @@ const likeCard = (req, res, next) => {
 };
 
 const dislikeCard = (req, res, next) => {
-  Card.findByIdAndUpdate(req.params.id, { $pull: { likes: req.user._id } }, {
+  const id = getUserId(req.cookies.jwt);
+  Card.findByIdAndUpdate(req.params.id, { $pull: { likes: id._id } }, {
     new: true, // обработчик then получит на вход обновлённую запись
   }).populate('likes')
     .then((card) => {
