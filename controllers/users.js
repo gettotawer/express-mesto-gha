@@ -52,11 +52,10 @@ const login = (req, res, next) => {
             .cookie('jwt', token, {
               maxAge: 3600000 * 24 * 7,
               httpOnly: true,
-            }).end();
+            }).send(user.toObject({
+              useProjection: true,
+            }));
         }).catch(next);
-      // return res.send(user.toObject({
-      //   useProjection: true,
-      // }));
     }).catch(next);
 };
 
