@@ -52,8 +52,9 @@ const likeCard = (req, res, next) => {
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Карточка с указанным _id не найдена.'));
+      } else {
+        return res.send(card);
       }
-      return res.send(card);
     }).catch((error) => {
       if (error.name === 'CastError') {
         next(new ValidationError('Передан несуществующий _id карточки.'));
@@ -70,8 +71,9 @@ const dislikeCard = (req, res, next) => {
     .then((card) => {
       if (!card) {
         next(new NotFoundError('Карточка с указанным _id не найдена.'));
+      } else {
+        return res.send(card);
       }
-      return res.send(card);
     }).catch((error) => {
       if (error.name === 'CastError') {
         next(new ValidationError('Передан несуществующий _id карточки.'));
