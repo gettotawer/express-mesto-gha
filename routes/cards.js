@@ -10,6 +10,7 @@ const regUrl = /^https?:\/\/[-a-zA-Z0-9]{2,256}\.([a-zA-Z/]{2,256})*/;
 routerCards.post('/', celebrate({
   body: Joi.object().keys({
     link: Joi.string().required().regex(regUrl),
+    name: Joi.string().min(2).max(30),
   }).unknown(true),
 }), createCard);
 routerCards.get('/', getAllCards);

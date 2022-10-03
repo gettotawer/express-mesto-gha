@@ -48,12 +48,12 @@ const login = (req, res, next) => {
             throw new AuthError('Пользователь не найден или неверный пароль');
           }
           const token = jwt.sign({ _id: user._id }, SECRET, { expiresIn: '7d' });
-          return res
+          res
             .cookie('jwt', token, {
               maxAge: 3600000 * 24 * 7,
               httpOnly: true,
-            })
-            .end();
+            }).end();
+          // return res.send({messase: 'Вы успешно автризировались!' });
         });
     }).catch(next);
 };
