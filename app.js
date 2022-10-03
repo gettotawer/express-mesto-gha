@@ -58,9 +58,9 @@ app.use((err, req, res, next) => {
   next();
 });
 
-// app.all('*', (req, res) => {
-//   res.status(404).send({ message: 'Страница не существует' });
-// });
+app.all('*', (req, res) => {
+  res.status(404).send({ message: 'Страница не существует' });
+});
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает

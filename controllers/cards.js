@@ -5,7 +5,7 @@ const ValidationError = require('../errors/validationError');
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
-  const id = getUserId(req.headers.authorization);
+  const id = getUserId(req.cookies.jwt);
   Card.create({ name, link, owner: id._id }).then((cardData) => {
     res.send(cardData);
   }).catch((error) => {
@@ -30,7 +30,9 @@ const deleteCardById = (req, res, next) => {
       next(new NotFoundError('Карточка с указанным _id не найдена.'));
     }
     if (card.owner._id.toString() !== id._id) {
-      next(new ValidationError('Вы не являетесь владельцем карточки.'));
+      const customErr = new Error('Вы не являетесь владельцем карточки.');
+      customErr.statusCode = 403;
+      next(customErr);
     }
     Card.findByIdAndRemove(req.params.id).populate('owner').then((deletedcard) => res.send(deletedcard))
       .catch((error) => {
