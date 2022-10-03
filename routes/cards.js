@@ -22,11 +22,15 @@ routerCards.delete('/:id', celebrate({
   }),
 }), deleteCardById);
 
-routerCards.put('/:id/likes', likeCard);
+routerCards.put('/:id/likes', celebrate({
+  params: Joi.object().keys({
+    id: Joi.string().required().alphanum().length(24),
+  }),
+}), likeCard);
 
 routerCards.delete('/:id/likes', celebrate({
   params: Joi.object().keys({
-    id: Joi.string().required().alphanum(),
+    id: Joi.string().required().alphanum().length(24),
   }),
 }), dislikeCard);
 

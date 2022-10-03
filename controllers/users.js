@@ -37,23 +37,26 @@ const login = (req, res, next) => {
     // eslint-disable-next-line consistent-return
     .then((user) => {
       if (!email || !password) {
-        throw new ValidationError('Одно или несколько полей не заполнены.');
+        next(new ValidationError('Одно или несколько полей не заполнены.'));
       }
       if (!user) {
-        throw new AuthError('Пользователь не найден или неверный пароль');
+        next(new AuthError('Пользователь не найден или неверный пароль'));
       }
       bcrypt.compare(password, user.password)
         .then((isAuth) => {
           if (!isAuth) {
-            throw new AuthError('Пользователь не найден или неверный пароль');
+            next(new AuthError('Пользователь не найден или неверный пароль'));
           }
           const token = jwt.sign({ _id: user._id }, SECRET, { expiresIn: '7d' });
-          res
+          return res
             .cookie('jwt', token, {
               maxAge: 3600000 * 24 * 7,
               httpOnly: true,
             }).end();
-        });
+        }).catch(next);
+      // return res.send(user.toObject({
+      //   useProjection: true,
+      // }));
     }).catch(next);
 };
 
@@ -66,7 +69,7 @@ const getAllUsers = (req, res, next) => {
 const getUserById = (req, res, next) => {
   User.findById(req.params.id).then((user) => {
     if (!user) {
-      throw new NotFoundError('Пользователь по указанному _id не найден.');
+      next(new NotFoundError('Пользователь по указанному _id не найден.'));
     }
     return res.send(user);
   }).catch((error) => {
@@ -104,7 +107,7 @@ const updateUserAvatar = (req, res, next) => {
     runValidators: true,
   }).then((user) => {
     if (!user) {
-      throw new NotFoundError('Пользователь по указанному _id не найден.');
+      next(new NotFoundError('Пользователь по указанному _id не найден.'));
     }
     res.send(user);
   }).catch((error) => {
@@ -123,7 +126,7 @@ const getUserInformation = (req, res, next) => {
   const id = getUserId(req.cookies.jwt);
   User.findById(id._id).then((user) => {
     if (!user) {
-      throw new NotFoundError('Пользователь по указанному _id не найден.');
+      next(new NotFoundError('Пользователь по указанному _id не найден.'));
     }
     return res.send(user);
   }).catch((error) => {

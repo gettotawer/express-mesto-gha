@@ -27,10 +27,10 @@ const deleteCardById = (req, res, next) => {
   // eslint-disable-next-line consistent-return
   Card.findById(req.params.id).populate('owner').then((card) => {
     if (!card) {
-      throw new NotFoundError('Карточка с указанным _id не найдена.');
+      next(new NotFoundError('Карточка с указанным _id не найдена.'));
     }
     if (card.owner._id.toString() !== id._id) {
-      throw new ValidationError('Вы не являетесь владельцем карточки.');
+      next(new ValidationError('Вы не являетесь владельцем карточки.'));
     }
     Card.findByIdAndRemove(req.params.id).populate('owner').then((deletedcard) => res.send(deletedcard))
       .catch((error) => {
@@ -49,7 +49,7 @@ const likeCard = (req, res, next) => {
   }).populate('likes')
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена.');
+        next(new NotFoundError('Карточка с указанным _id не найдена.'));
       }
       return res.send(card);
     }).catch((error) => {
@@ -67,7 +67,7 @@ const dislikeCard = (req, res, next) => {
   }).populate('likes')
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка с указанным _id не найдена.');
+        next(new NotFoundError('Карточка с указанным _id не найдена.'));
       }
       return res.send(card);
     }).catch((error) => {
