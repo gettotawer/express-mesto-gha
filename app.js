@@ -9,6 +9,7 @@ const { login, createUser } = require('./controllers/users');
 const {
   isAuthorizedMiddleware,
 } = require('./middlewares/auth');
+const NotFoundError = require('./errors/notFoundError');
 
 const regUrl = /^https?:\/\/[-a-zA-Z0-9]{2,256}\.([a-zA-Z/]{2,256})*/;
 
@@ -29,7 +30,7 @@ app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-  }).unknown(true),
+  }),
 }), login);
 
 app.post('/signup', celebrate({
@@ -39,8 +40,12 @@ app.post('/signup', celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().regex(regUrl),
     password: Joi.string().required(),
-  }).unknown(true),
+  }),
 }), createUser);
+
+app.all('*', isAuthorizedMiddleware, (req, res, next) => {
+  next(new NotFoundError('Страница не существует'));
+});
 
 app.use(errors());
 
@@ -56,10 +61,6 @@ app.use((err, req, res, next) => {
     });
 
   next();
-});
-
-app.all('*', (req, res) => {
-  res.status(404).send({ message: 'Страница не существует' });
 });
 
 app.listen(PORT, () => {

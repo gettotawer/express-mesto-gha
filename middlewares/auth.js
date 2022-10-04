@@ -15,7 +15,8 @@ const isAuthorizedMiddleware = (req, res, next) => {
         }
         next();
       })
-      .catch(() => next());
+      .catch(next);
+    req.user = payload;
   } catch (e) {
     next(new AuthError('Ошибка! Вы не авторизированы.'));
   }
