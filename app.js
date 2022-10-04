@@ -43,6 +43,10 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
+app.get('/signout', (req, res) => {
+  res.clearCookie('jwt').send({ message: 'Выход' });
+});
+
 app.all('*', isAuthorizedMiddleware, (req, res, next) => {
   next(new NotFoundError('Страница не существует'));
 });
